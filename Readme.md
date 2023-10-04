@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Elvira Fatin](https://up.htmlacademy.ru/javascript/30/user/2288551).
-* Наставник: `Неизвестно`.
+* Наставник: [Никита Сигов](https://htmlacademy.ru/profile/crazer).
 
 ---
 
