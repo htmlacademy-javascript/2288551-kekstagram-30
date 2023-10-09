@@ -1,12 +1,12 @@
 //Задание 1: проверки длины строки
 
-function checkingLength (string, maxLength) {
+function checkingLength (string, maxLength) { //eslint-disable-line no-unused-vars
   return (string.length <= maxLength);
 }
 
 //Задание 2: является ли строка палиндромом
 
-function checkingPalindrome (word) {
+function checkingPalindrome (word) { //eslint-disable-line no-unused-vars
   word = (word.toLowerCase()).replaceAll(' ', '');
   let copyWord = '';
   for (let i = word.length - 1; i >= 0; --i) {
@@ -17,7 +17,7 @@ function checkingPalindrome (word) {
 
 //Задание 3: извлекаем цифры
 
-function searchNumbers (string) {
+function searchNumbers (string) { //eslint-disable-line no-unused-vars
   string = string.toString();
   let booleanResult;
   let sumString = '';
