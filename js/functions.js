@@ -6,8 +6,9 @@ function checkingLength (string, maxLength) { //eslint-disable-line no-unused-va
 
 //Задание 2: является ли строка палиндромом
 
-function checkingPalindrome (word) { //eslint-disable-line no-unused-vars
-  word = (word.toLowerCase()).replaceAll(' ', '');
+function checkingPalindrome (string) { //eslint-disable-line no-unused-vars
+  let word = '';
+  word = (string.toLowerCase()).replaceAll(' ', '');
   let copyWord = '';
   for (let i = word.length - 1; i >= 0; --i) {
     copyWord += word[i];
@@ -19,11 +20,9 @@ function checkingPalindrome (word) { //eslint-disable-line no-unused-vars
 
 function searchNumbers (string) { //eslint-disable-line no-unused-vars
   string = string.toString();
-  let booleanResult;
   let sumString = '';
   for (let i = 0; i < string.length; ++i) {
-    booleanResult = Number.isNaN(parseInt(string[i], 10));
-    if (booleanResult === false){
+    if (!Number.isNaN(parseInt(string[i], 10))) {
       sumString += string[i];
     }
   }
