@@ -31,14 +31,13 @@ const MESSAGE = [
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.'
 ];
 
-
-const createIdGenerator = function () {
+function createIdGenerator() {
   let lastGeneratedId = 0;
   return function () {
     lastGeneratedId += 1;
     return lastGeneratedId;
   };
-};
+}
 
 function getRandomInteger (min, max) {
   const lower = Math.ceil(Math.min(min, max));
@@ -69,16 +68,21 @@ const commentId = createIdGenerator();
 const photoId = createRandomIdFromRangeGenerator(1, OBJECT_COUNT);
 const photoUrl = createRandomIdFromRangeGenerator(1, OBJECT_COUNT);
 
+const makeComment = () => ({
+  id: commentId,
+  avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+  message: getRandomArrayElement(MESSAGE),
+  name: getRandomArrayElement(NAME),
+});
+
+function similarComment () {
+  return Array.from({length: getRandomInteger(1, 30)}, makeComment);
+}
+
 const photo = () => ({
   id: photoId,
   url: `photos/${photoUrl}.jpg`,
   description: getRandomArrayElement(DESCRIPTION),
   likes: getRandomInteger(15,200),
-  comments: {
-    id: commentId,
-    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-    message: getRandomArrayElement(MESSAGE),
-    name: getRandomArrayElement(NAME),
-  }
+  comments: similarComment()
 });
-// нужна функция генерации comments 0 - 30
