@@ -1,6 +1,6 @@
 const OBJECT_COUNT = 25;
 
-const NAME = [
+const NAMES = [
   'Кузьма',
   'Прасковья',
   'Инга',
@@ -13,7 +13,7 @@ const NAME = [
   'Глафира'
 ];
 
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'важный',
   'знаменитый',
   'ласковый',
@@ -26,7 +26,7 @@ const DESCRIPTION = [
   'утренний'
 ];
 
-const MESSAGE = [
+const MESSAGES = [
   'Всё отлично!',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.'
 ];
@@ -69,10 +69,10 @@ const photoId = createRandomIdFromRangeGenerator(1, OBJECT_COUNT);
 const photoUrl = createRandomIdFromRangeGenerator(1, OBJECT_COUNT);
 
 const makeComment = () => ({
-  id: commentId,
+  id: commentId(),
   avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-  message: getRandomArrayElement(MESSAGE),
-  name: getRandomArrayElement(NAME),
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
 });
 
 function similarComment () {
@@ -80,9 +80,13 @@ function similarComment () {
 }
 
 const photo = () => ({
-  id: photoId,
-  url: `photos/${photoUrl}.jpg`,
-  description: getRandomArrayElement(DESCRIPTION),
+  id: photoId(),
+  url: `photos/${photoUrl()}.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger(15,200),
   comments: similarComment()
 });
+
+function makePhotos () {
+  return Array.from({length: 25}, photo);
+}
