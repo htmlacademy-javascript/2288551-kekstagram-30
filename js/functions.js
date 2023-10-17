@@ -31,18 +31,15 @@ function searchNumbers (string) { //eslint-disable-line no-unused-vars
 
 //Задание(module5-task2): Делу — время
 function workLifeBalance(startDay, endDay, startMeeting, durationMeeting) { //eslint-disable-line no-unused-vars
-  startDay = startDay.split(':');
-  startDay.forEach((element, index, array) => array[index] = Number(element));
-  const startDayTime = startDay[0] * 60 + startDay[1];
-
-  endDay = endDay.split(':');
-  endDay.forEach((element, index, array) => array[index] = Number(element));
-  const endDayTime = endDay[0] * 60 + endDay[1];
-
-  startMeeting = startMeeting.split(':');
-  startMeeting.forEach((element, index, array) => array[index] = Number(element));
-  const startMeetingTime = startMeeting[0] * 60 + startMeeting[1];
-  const endMeetingTime = startMeeting[0] * 60 + startMeeting[1] + durationMeeting;
+  function makeTime(string) {
+    string = string.split(':');
+    string.forEach((element, index, array) => array[index] = Number(element));
+    return string[0] * 60 + string[1];
+  }
+  const startDayTime = makeTime(startDay);
+  const endDayTime = makeTime(endDay);
+  const startMeetingTime = makeTime(startMeeting);
+  const endMeetingTime = startMeetingTime + durationMeeting;
 
   if (startDayTime <= startMeetingTime && endDayTime >= endMeetingTime) {
     return true;
