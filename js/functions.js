@@ -28,3 +28,20 @@ function searchNumbers (string) { //eslint-disable-line no-unused-vars
   }
   return (sumString === '') ? NaN : Number(sumString);
 }
+
+//Задание(module5-task2): Делу — время
+function workLifeBalance(startDay, endDay, startMeeting, durationMeeting) { //eslint-disable-line no-unused-vars
+  function makeTime(string) {
+    const arrayTime = string.split(':').map((element) => Number(element));
+    return arrayTime[0] * 60 + arrayTime[1];
+  }
+  const startDayTime = makeTime(startDay);
+  const endDayTime = makeTime(endDay);
+  const startMeetingTime = makeTime(startMeeting);
+  const endMeetingTime = startMeetingTime + durationMeeting;
+
+  if (startDayTime <= startMeetingTime && endDayTime >= endMeetingTime) {
+    return true;
+  }
+  return false;
+}
