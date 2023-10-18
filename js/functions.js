@@ -32,9 +32,8 @@ function searchNumbers (string) { //eslint-disable-line no-unused-vars
 //Задание(module5-task2): Делу — время
 function workLifeBalance(startDay, endDay, startMeeting, durationMeeting) { //eslint-disable-line no-unused-vars
   function makeTime(string) {
-    string = string.split(':');
-    string.forEach((element, index, array) => array[index] = Number(element));
-    return string[0] * 60 + string[1];
+    const arrayTime = string.split(':').map((element) => Number(element));
+    return arrayTime[0] * 60 + arrayTime[1];
   }
   const startDayTime = makeTime(startDay);
   const endDayTime = makeTime(endDay);
