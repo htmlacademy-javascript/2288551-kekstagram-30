@@ -1,5 +1,3 @@
-//import { generatePosts } from './main.js';
-
 const pictures = document.querySelector('.pictures');
 const templatePost = document.querySelector('#picture').content.querySelector('.picture');
 const similarListFragment = document.createDocumentFragment();
