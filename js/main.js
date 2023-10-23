@@ -1,6 +1,6 @@
 import {makePhoto} from './generate-posts.js';
-import {createPosts} from './render-pictures';
+import {renderPictures} from './render-pictures';
 const generatePosts = Array.from({length: 25}, makePhoto);
 
-console.log(createPosts(generatePosts));
+console.log(renderPictures(generatePosts));
 //export {generatePosts};
