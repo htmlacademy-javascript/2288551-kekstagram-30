@@ -1,4 +1,4 @@
-import { renderBigPicture, openUserModal } from './render-big-pictures';
+import { renderBigPicture } from './render-big-pictures';
 
 const pictures = document.querySelector('.pictures');
 const templatePost = document.querySelector('#picture').content.querySelector('.picture');
@@ -18,7 +18,6 @@ function renderPictures(posts) {
     post.addEventListener('click', (evt) => {
       evt.preventDefault();// элемент-ссылка, убрать действие по умолчанию
       renderBigPicture(element); // функция для отрисовки фото
-      openUserModal();
     });
   });
 
