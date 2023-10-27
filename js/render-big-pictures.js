@@ -45,6 +45,13 @@ function renderBigPicture(post) {
 
   //генерация комментов под фото
   generateComments(post);
+
+  if (post.comments.length < 5) {
+    commentsLoader.classList.add('hidden');
+    socialCommentShownCount.textContent = post.comments.length;
+  } else {
+    socialCommentShownCount.textContent = 5;
+  }
 }
 
 function generateComments(post) {
@@ -53,46 +60,30 @@ function generateComments(post) {
   post.comments.forEach((element, index) => {
     const { avatar, message, name } = element;
     const commentClone = socialComment.cloneNode(true);
-    socialComment.querySelector('.social__picture').src = avatar;
-    socialComment.querySelector('.social__picture').alt = name;
-    socialComment.querySelector('.social__text').textContent = message;
+    commentClone.querySelector('.social__picture').src = avatar;
+    commentClone.querySelector('.social__picture').alt = name;
+    commentClone.querySelector('.social__text').textContent = message;
 
     if (index > 4) {
       commentClone.classList.add('hidden');
     }
-    /**
-     * проверка кол-ва комментов, если меньше 5 убираем кнопку загрузки комментов
-     * socialCommentShownCount добавляем значение кол-во видимых комментов
-     */
-    //нужно сделать для каждого коммента
-    if (post.comments.length < 4) {
-      commentsLoader.classList.add('hidden');
-      socialCommentShownCount.textContent = post.comments.length;
-    }
 
     commentBox.append(commentClone);
   });
-  socialComments.innerHTML = '';//удаляет только один коммент
-  //два лишних коммента из html, как удалить?
+  socialComments.innerHTML = '';
   socialComments.append(commentBox);
 
-  // нужно сделать для каждого коммента
-  commentsLoader.addEventListener('click', () => {
-    const collectionCommentsHidden = socialComments.querySelectorAll('.hidden');
-    console.log(collectionCommentsHidden.length);
-    console.log(socialCommentShownCount.textContent);
-    for (const index in collectionCommentsHidden) {
+  // // нужно сделать для каждого коммента
+  // commentsLoader.addEventListener('click', () => {
+  //   const collectionCommentsHidden = socialComments.querySelectorAll('.hidden');
+  //   for (const index in collectionCommentsHidden) {
 
-      if (index < 5) {
-        collectionCommentsHidden[index].classList.remove('hidden');
-        socialCommentShownCount.textContent = Number(socialCommentShownCount.textContent) + 1;
-      }
-      // if (collectionCommentsHidden.classList.contains('hidden')) {
-      // }
-      //если collectionCommentsHidden не содерж эл-ов с классом hidden, добавить кнопке класс hidden
-    }
-  });
-  //   commentsLoader.addEventListener(
+  //     if (index < 5) {
+  //       collectionCommentsHidden[index].classList.remove('hidden');
+  //       socialCommentShownCount.textContent = Number(socialCommentShownCount.textContent) + 1;
+  //     }
+  //   }
+  // });
 }
 
-export { renderBigPicture };
+export { renderBigPicture, commentsLoader };
