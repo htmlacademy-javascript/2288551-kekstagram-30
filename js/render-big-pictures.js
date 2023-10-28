@@ -22,11 +22,8 @@ function openUserModal() {
   document.body.classList.add('modal-open'); // при скролле, сайт за модал окном не двигается
   bigPicture.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
+  commentsLoader.addEventListener('click', showMoreComments);
 }
-
-closePictureButton.addEventListener('click', () => {
-  closeUserModal();
-});
 
 function closeUserModal() {
   document.body.classList.remove('modal-open');
@@ -34,7 +31,12 @@ function closeUserModal() {
 
   document.removeEventListener('keydown', onDocumentKeydown);
   document.removeEventListener('click', closePictureButton);
+  commentsLoader.removeEventListener('click', showMoreComments);
 }
+
+closePictureButton.addEventListener('click', () => {
+  closeUserModal();
+});
 
 function renderBigPicture(post) {
   openUserModal();
@@ -46,10 +48,12 @@ function renderBigPicture(post) {
   //генерация комментов под фото
   generateComments(post);
 
+  //отображение кнопки загрузки
   if (post.comments.length < 5) {
     commentsLoader.classList.add('hidden');
-    socialCommentShownCount.textContent = post.comments.length;
+    socialCommentShownCount.textContent = post.comments.length; //число отображаемых комментов кладем кол-во комментов
   } else {
+    commentsLoader.classList.remove('hidden');
     socialCommentShownCount.textContent = 5;
   }
 }
@@ -64,6 +68,7 @@ function generateComments(post) {
     commentClone.querySelector('.social__picture').alt = name;
     commentClone.querySelector('.social__text').textContent = message;
 
+    //добавляем класс hidden эл-там которые не отображаем
     if (index > 4) {
       commentClone.classList.add('hidden');
     }
@@ -72,18 +77,22 @@ function generateComments(post) {
   });
   socialComments.innerHTML = '';
   socialComments.append(commentBox);
+}
 
-  // // нужно сделать для каждого коммента
-  // commentsLoader.addEventListener('click', () => {
-  //   const collectionCommentsHidden = socialComments.querySelectorAll('.hidden');
-  //   for (const index in collectionCommentsHidden) {
+function showMoreComments () {
+  const allComments = socialComments.querySelectorAll('.social__comment').length;
+  const collectionCommentsHidden = socialComments.querySelectorAll('.hidden');
+  for (const index in collectionCommentsHidden) {
 
-  //     if (index < 5) {
-  //       collectionCommentsHidden[index].classList.remove('hidden');
-  //       socialCommentShownCount.textContent = Number(socialCommentShownCount.textContent) + 1;
-  //     }
-  //   }
-  // });
+    if (index < 5) {
+      collectionCommentsHidden[index].classList.remove('hidden');
+      socialCommentShownCount.textContent = Number(socialCommentShownCount.textContent) + 1;
+    }
+    //сравниваем кол-во всех комментов с загруженными
+    if(allComments === Number(socialCommentShownCount.textContent)) {
+      commentsLoader.classList.add('hidden');
+    }
+  }
 }
 
 export { renderBigPicture, commentsLoader };
