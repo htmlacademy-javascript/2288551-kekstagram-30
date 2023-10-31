@@ -10,6 +10,7 @@ const socialComments = document.querySelector('.social__comments'); // ul
 const socialComment = document.querySelector('.social__comment'); // li
 const socialCommentShownCount = document.querySelector('.social__comment-shown-count');
 const commentsLoader = document.querySelector('.comments-loader');
+const COMMENTS_PORTION = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -49,12 +50,12 @@ function renderBigPicture(post) {
   generateComments(post);
 
   //отображение кнопки загрузки
-  if (post.comments.length < 5) {
+  if (post.comments.length < COMMENTS_PORTION) {
     commentsLoader.classList.add('hidden');
     socialCommentShownCount.textContent = post.comments.length; //число отображаемых комментов кладем кол-во комментов
   } else {
     commentsLoader.classList.remove('hidden');
-    socialCommentShownCount.textContent = 5;
+    socialCommentShownCount.textContent = COMMENTS_PORTION;
   }
 }
 
@@ -69,7 +70,7 @@ function generateComments(post) {
     commentClone.querySelector('.social__text').textContent = message;
 
     //добавляем класс hidden эл-там которые не отображаем
-    if (index > 4) {
+    if (index > COMMENTS_PORTION - 1) {
       commentClone.classList.add('hidden');
     }
 
@@ -84,7 +85,7 @@ function showMoreComments () {
   const collectionCommentsHidden = socialComments.querySelectorAll('.hidden');
   for (const index in collectionCommentsHidden) {
 
-    if (index < 5) {
+    if (index < COMMENTS_PORTION) {
       collectionCommentsHidden[index].classList.remove('hidden');
       socialCommentShownCount.textContent = Number(socialCommentShownCount.textContent) + 1;
     }
