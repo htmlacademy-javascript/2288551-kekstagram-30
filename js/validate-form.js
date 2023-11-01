@@ -9,6 +9,22 @@ const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
 const hashtagRegExp = /^#[a-zа-я0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
+//отдельный файл с эффектами
+// const effectSlider = document.querySelector('.effect-level__slider');
+// const effectValue = document.querySelector('.effect-level__value');
+// noUiSlider.create(effectSlider, {
+//   range: {
+//     min: 0,
+//     max: 100,
+//   },
+//   start: 0,
+//   step: 1,
+//   conect: 'lower',
+// });
+
+// effectSlider.noUiSlider.on('update', () => {
+//   imgUploadPreview.style = effectSlider.noUiSlider.get();
+// });
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -53,7 +69,7 @@ const pristine = new Pristine(form, {
 });
 
 //добавить загруженное фото
-// ?.addEventListener('load', (evt) => {
+//  imgUploadPreview.addEventListener('load', (evt) => {
 //   imgUploadPreview.src = evt.target.result;
 // });
 
@@ -89,7 +105,6 @@ form.addEventListener('submit', (evt) => {
     form.submit();
   }
 });
-
 
 function uploadImage() {
   imgUploadInput.addEventListener('change', openForm);
