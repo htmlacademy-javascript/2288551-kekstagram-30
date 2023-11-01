@@ -8,7 +8,7 @@ const buttonCancel = document.querySelector('#upload-cancel');
 const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
 const hashtagRegExp = /^#[a-zа-я0-9]{1,19}$/i;
-const HASHTAG_COUNT = 5;
+const HASHTAGS_COUNT = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -45,25 +45,51 @@ function closeForm() {
   textHashtags.removeEventListener('keydown', onTextKeydown);
 }
 
+//создаем валидацию
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'form-error'
+});
+
+//добавить загруженное фото
 // ?.addEventListener('load', (evt) => {
 //   imgUploadPreview.src = evt.target.result;
 // });
 
-// const pristine = new Pristine(form);
-function validateHashtags(hashtags) {
-  const arrayHashtags = (hashtags.toLowerCase()).split(' '); // делаем массив из строчки
-  if (arrayHashtags.length > HASHTAG_COUNT) { //проверяем кол-во хэштегов
-    console.log("много хэштегов"); // сделать ошибку pristine, если много
-  } else {
-    arrayHashtags.every((hashtag) => hashtagRegExp.test(hashtag));
-  }
-  //проверить чтоб хэштеги не повторялись
+//количество хэш-тегов не более 5
+function checkHashtagCount(string) {
+  const arrayString = (string.toLowerCase().trim()).split(' ');
+  return (arrayString.length <= HASHTAGS_COUNT);
 }
 
+//хэш-тег соответсвует регулярному выражению
+function checkRegExp(string) {
+  const arrayString = (string.toLowerCase().trim()).split(' ');
+  if (string.length === 0) { //если string пустая не проверять
+    return true;
+  }
+  return arrayString.every((hashtag) => hashtagRegExp.test(hashtag));
+}
 
-// form.addEventListener('submit', (evt) => {
-//   evt.preventDefault();
-// });
+//хэш-тег уникален
+function checkUnique(string) {
+  const arrayString = (string.toLowerCase().trim()).split(' ');
+  return (Array.from(new Set(arrayString)).length === arrayString.length);
+}
+
+pristine.addValidator(textHashtags, checkHashtagCount, 'не более 5 хэш-тегов');
+pristine.addValidator(textHashtags, checkRegExp, 'некорректно введены хэш-теги');
+pristine.addValidator(textHashtags, checkUnique, 'некорректно введены хэш-теги');
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    form.submit();
+  }
+});
+
 
 function uploadImage() {
   imgUploadInput.addEventListener('change', openForm);
