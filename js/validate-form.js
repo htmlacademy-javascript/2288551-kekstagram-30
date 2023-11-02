@@ -56,7 +56,6 @@ function closeForm() {
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
-  document.removeEventListener('click', closeForm);
   textDescription.removeEventListener('keydown', onTextKeydown);
   textHashtags.removeEventListener('keydown', onTextKeydown);
 }
@@ -74,29 +73,39 @@ const pristine = new Pristine(form, {
 // });
 
 //количество хэш-тегов не более 5
-function checkHashtagCount(string) {
-  const arrayString = (string.toLowerCase().trim()).split(' ');
+function checkHashtagCount(arrayString) {
   return (arrayString.length <= HASHTAGS_COUNT);
 }
 
 //хэш-тег соответсвует регулярному выражению
-function checkRegExp(string) {
-  const arrayString = (string.toLowerCase().trim()).split(' ');
-  if (string.length === 0) { //если string пустая не проверять
-    return true;
-  }
+function checkRegExp(arrayString) {
   return arrayString.every((hashtag) => hashtagRegExp.test(hashtag));
 }
 
 //хэш-тег уникален
-function checkUnique(string) {
-  const arrayString = (string.toLowerCase().trim()).split(' ');
+function checkUnique(arrayString) {
   return (Array.from(new Set(arrayString)).length === arrayString.length);
 }
 
-pristine.addValidator(textHashtags, checkHashtagCount, 'не более 5 хэш-тегов');
-pristine.addValidator(textHashtags, checkRegExp, 'некорректно введены хэш-теги');
-pristine.addValidator(textHashtags, checkUnique, 'некорректно введены хэш-теги');
+const validator = (type) => (string) => {
+  if (string.length === 0) { //если string пустая не проверять
+    return true;
+  }
+  const arrayString = (string.toLowerCase().trim()).split(' ');
+
+  switch (type) {
+    case 'count':
+      return checkHashtagCount(arrayString);
+    case 'regExp':
+      return checkRegExp(arrayString);
+    case 'unique':
+      return checkUnique(arrayString);
+  }
+};
+
+pristine.addValidator(textHashtags, validator('count'), 'не более 5 хэш-тегов');
+pristine.addValidator(textHashtags, validator('regExp'), 'некорректно введен хэш-тег');
+pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
