@@ -4,6 +4,8 @@ const effectSlider = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const effectLevel = document.querySelector('.effect-level');
 const effectsList = document.querySelector('.effects__list');
+const scaleControlValue = document.querySelector('.scale__control--value');
+const SCALE_STEP = 25;
 
 effectLevel.classList.add('hidden');
 
@@ -26,10 +28,10 @@ const filters = {
     start: 0,
     step: 1,
     format: {
-      to (value) {
+      to(value) {
         return `${Number(value).toFixed(0)}%`;
       },
-      from (value) {
+      from(value) {
         return parseFloat(value);
       },
     }
@@ -40,10 +42,10 @@ const filters = {
     start: 0,
     step: 0.1,
     format: {
-      to (value) {
+      to(value) {
         return `${Number(value).toFixed(1)}px`;
       },
-      from (value) {
+      from(value) {
         return parseFloat(value);
       },
     }
@@ -66,10 +68,10 @@ noUiSlider.create(effectSlider, {
   step: 1,
   connect: 'lower',
   format: {
-    to (value) {
+    to(value) {
       return Number(value).toFixed(1);
     },
-    from (value) {
+    from(value) {
       return parseFloat(value);
     },
   }
@@ -86,7 +88,6 @@ effectsList.addEventListener('click', (evt) => {
   effectLevel.classList.remove('hidden');
   //effectLevel.noUiSlider.destroy();
   let styleName = '';
-
   //по ключу нахожу настройки слайдера
   for (const key in filters) {
     if (evt.target.value === key) {
@@ -116,6 +117,7 @@ effectsList.addEventListener('click', (evt) => {
   }
 });
 
+
 //у всех убираем сотые, десятичные оставляем, кроме marvin
 // .effects__preview--chrome {
 //           filter: grayscale(1);
@@ -136,3 +138,13 @@ effectsList.addEventListener('click', (evt) => {
 // .effects__preview--heat {
 //           filter: brightness(3);
 // }
+
+function transformScale() {
+  document.querySelector('.img-upload__scale').addEventListener('click', (evt) => {
+    const scaleControlNumber = parseInt(scaleControlValue.value, 10);
+    if (evt.target.classList.contains('scale__control--smaller')) {
+      imgUploadPreview.style.transform = `scale${((scaleControlNumber - SCALE_STEP) / 100)}%`;
+    }
+  });
+}
+transformScale();
