@@ -1,4 +1,5 @@
 import { isEscapeKey } from './util';
+import { addEffects, removeEffects } from './apply-effect';
 
 const form = document.querySelector('.img-upload__form');
 const imgUploadInput = document.querySelector('#upload-file');
@@ -23,9 +24,26 @@ const onTextKeydown = (evt) => {
   }
 };
 
+//создаем валидацию
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'form-error'
+});
+
+const onValidation = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    form.submit();
+  }
+};
+
 function openForm() {
   document.body.classList.add('modal-open');
   imgUploadOverlay.classList.remove('hidden');
+  addEffects();
+  form.addEventListener('submit', onValidation);
   document.addEventListener('keydown', onDocumentKeydown);
   textDescription.addEventListener('keydown', onTextKeydown);
   textHashtags.addEventListener('keydown', onTextKeydown);
@@ -37,19 +55,14 @@ buttonCancel.addEventListener('click', () => {
 
 function closeForm() {
   form.reset();
+  removeEffects();
+  form.removeEventListener('submit',onValidation);
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
   textDescription.removeEventListener('keydown', onTextKeydown);
   textHashtags.removeEventListener('keydown', onTextKeydown);
 }
-
-//создаем валидацию
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'form-error'
-});
 
 //добавить загруженное фото
 //  imgUploadPreview.addEventListener('load', (evt) => {
@@ -90,14 +103,6 @@ const validator = (type) => (string) => {
 pristine.addValidator(textHashtags, validator('count'), 'не более 5 хэш-тегов');
 pristine.addValidator(textHashtags, validator('regExp'), 'некорректно введен хэш-тег');
 pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
-
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
-  }
-});
 
 function uploadImage() {
   imgUploadInput.addEventListener('change', openForm);
