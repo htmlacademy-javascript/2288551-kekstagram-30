@@ -8,7 +8,7 @@ const imgUploadPreview = document.querySelector('.img-upload__preview img'); //�
 const buttonCancel = document.querySelector('#upload-cancel');
 const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
-const hashtagRegExp = /^#[a-zа-я0-9]{1,19}$/i;
+const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
 
 const onDocumentKeydown = (evt) => {
@@ -81,14 +81,14 @@ function checkRegExp(arrayString) {
 
 //хэш-тег уникален
 function checkUnique(arrayString) {
-  return (Array.from(new Set(arrayString)).length === arrayString.length);
+  return (new Set(arrayString).size === arrayString.length);
 }
 
 const validator = (type) => (string) => {
   if (string.length === 0) { //если string пустая не проверять
     return true;
   }
-  const arrayString = (string.toLowerCase().trim()).split(' ');
+  const arrayString = (string.toLowerCase().trim()).split(' ').filter((tag) => Boolean(tag.length));
 
   switch (type) {
     case 'count':
