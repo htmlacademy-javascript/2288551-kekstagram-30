@@ -9,6 +9,7 @@ const imgUploadScale = document.querySelector('.img-upload__scale');
 const SCALE_STEP = 25;
 const MAX_SIZE = 100;
 const MIN_SIZE = 25;
+let currentFilter;
 
 const filters = {
   chrome: {
@@ -16,46 +17,35 @@ const filters = {
     range: { min: 0, max: 1 },
     start: 1,
     step: 0.1,
+    suffix: ''
   },
   sepia: {
     name: 'sepia',
     range: { min: 0, max: 1 },
     start: 1,
     step: 0.1,
+    suffix: ''
   },
   marvin: {
     name: 'invert',
     range: { min: 0, max: 100 },
     start: 100,
     step: 1,
-    format: {
-      to(value) {
-        return `${Number(value).toFixed(0)}%`;
-      },
-      from(value) {
-        return parseFloat(value);
-      },
-    }
+    suffix: '%'
   },
   phobos: {
     name: 'blur',
     range: { min: 0, max: 3 },
     start: 3,
     step: 0.1,
-    format: {
-      to(value) {
-        return `${Number(value).toFixed(1)}px`;
-      },
-      from(value) {
-        return parseFloat(value);
-      },
-    }
+    suffix: 'px'
   },
   heat: {
     name: 'brightness',
     range: { min: 1, max: 3 },
     start: 3,
     step: 0.1,
+    suffix: ''
   },
 };
 
@@ -78,15 +68,24 @@ noUiSlider.create(effectSlider, {
   }
 });
 
+//значение слайдера записываем в effectValue
+effectSlider.noUiSlider.on('update', () => {
+  const value = effectSlider.noUiSlider.get();
+  effectValue.value = value;
+  if(currentFilter) {
+    imgUploadPreview.style.filter = `${currentFilter.name}(${value}${currentFilter.suffix})`;//``нужны для круглых скобок
+  }
+});
+
 const onEffects = (evt) => {
   imgUploadPreview.removeAttribute('class'); //убираем класс
   const effectsPreview = `effects__preview--${evt.target.value}`;//стиль фильтра
   imgUploadPreview.classList.add(effectsPreview);
   effectLevel.classList.remove('hidden');
-  let styleName = '';
 
   if (filters[evt.target.value]) {
-    styleName = filters[evt.target.value].name;
+    currentFilter = filters[evt.target.value];
+    /** @to-do */
     const { range: { min, max }, start, step } = filters[evt.target.value];
 
     effectSlider.noUiSlider.updateOptions({
@@ -99,16 +98,11 @@ const onEffects = (evt) => {
     });
   }
 
-  //значение слайдера записываем в effectValue
-  effectSlider.noUiSlider.on('update', () => {
-    effectValue.value = effectSlider.noUiSlider.get();
-    imgUploadPreview.style.filter = `${styleName}(${(String(effectValue.value))})`;//``нужны для круглых скобок
-  });
-
   //ползунок убираем,тк оригинал фото
   if (evt.target.value === 'none') {
     effectLevel.classList.add('hidden');
     imgUploadPreview.style.filter = 'none';
+    currentFilter = null;
   }
 };
 
@@ -125,18 +119,18 @@ const onScaleButtons = (evt) => {
 };
 
 //ф-ции для добавления фильтров и размера, передаю в openForm() и closeForm() из ./validate-form
-function addEffects () {
+function addEffects() {
   imgUploadScale.addEventListener('click', onScaleButtons);
   effectsList.addEventListener('click', onEffects);
   imgUploadPreview.style.transform = 'scale(1)'; //при открытии окна, фото всегда 100%
   effectLevel.classList.add('hidden');
 }
 
-function removeEffects () {
+function removeEffects() {
   imgUploadScale.removeEventListener('click', onScaleButtons);
   effectsList.removeEventListener('click', onEffects);
   imgUploadPreview.style.filter = 'none'; //сброс фильтра
   effectLevel.classList.add('hidden'); // прячем ползунок
 }
 
-export {addEffects, removeEffects};
+export { addEffects, removeEffects };
