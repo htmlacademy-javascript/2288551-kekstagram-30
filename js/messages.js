@@ -1,5 +1,3 @@
-import {isEscapeKey} from './util';
-
 const elementSuccess = document
   .querySelector('#success')
   .content.
@@ -11,14 +9,14 @@ const elementError = document
   .querySelector('.error');
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (evt.key === 'Escape') {
     evt.preventDefault();
     hideMessage();
   }
 };
 
 function onBodyClick(evt) {
-  if(evt.target.closest('.success__inner') || evt.target.closest('.error__inner')) {
+  if(evt.target.closest('.error__inner') || evt.target.closest('.success__inner')) {
     return;
   }
   hideMessage();
@@ -27,10 +25,11 @@ function onBodyClick(evt) {
 function showMessage(element, button) {
   document.body.append(element);
   document.body.addEventListener('click', onBodyClick);
-  element.querySelector(button).addEventListener('click', onCloseButton);
   document.addEventListener('keydown', onDocumentKeydown);
-
+  element.querySelector(button).addEventListener('click', onCloseButton);
 }
+
+//не работает keydown на '.error'
 function hideMessage() {
   const elementMessage = document.querySelector('.success') || document.querySelector('.error');
   elementMessage.remove();

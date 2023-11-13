@@ -24,9 +24,11 @@ function showSubmitButton(isDisabled) {
     ? submitButtonCaption.SENDING
     : submitButtonCaption.IDLE;
 }
-
+function isErrorMessage() {
+  return Boolean(document.querySelector('#error'));
+}
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) && !isErrorMessage()) {
     evt.preventDefault();
     closeForm(); //другая ф-ция, нельзя взять из render-big-picture
   }
