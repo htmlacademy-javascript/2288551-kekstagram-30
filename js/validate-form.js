@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util';
 import { addEffects, removeEffects } from './apply-effect';
+import { sendPicture } from './api';
+import { showSuccessMessage, showErrorMessage } from './messages';
 
 const form = document.querySelector('.img-upload__form');
 const imgUploadInput = document.querySelector('#upload-file');
@@ -8,8 +10,20 @@ const imgUploadPreview = document.querySelector('.img-upload__preview img'); //�
 const buttonCancel = document.querySelector('#upload-cancel');
 const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
+const submitButton = document.querySelector('#upload-submit');
 const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
+const submitButtonCaption = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
+};
+
+function showSubmitButton(isDisabled) {
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled
+    ? submitButtonCaption.SENDING
+    : submitButtonCaption.IDLE;
+}
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -31,19 +45,32 @@ const pristine = new Pristine(form, {
   errorTextClass: 'form-error'
 });
 
-const onValidation = (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
+async function setUserFormSubmit(formElement) {
+  if (!pristine.validate()) {
+    return;
   }
+  try {
+    showSuccessMessage();
+    showSubmitButton(true);
+    await sendPicture(new FormData(formElement));
+    closeForm();
+  } catch {
+    showErrorMessage();
+  } finally {
+    showSubmitButton(false);
+  }
+}
+
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  setUserFormSubmit(evt.target);
 };
 
 function openForm() {
   document.body.classList.add('modal-open');
   imgUploadOverlay.classList.remove('hidden');
   addEffects();
-  form.addEventListener('submit', onValidation);
   document.addEventListener('keydown', onDocumentKeydown);
   textDescription.addEventListener('keydown', onTextKeydown);
   textHashtags.addEventListener('keydown', onTextKeydown);
@@ -56,7 +83,6 @@ buttonCancel.addEventListener('click', () => {
 function closeForm() {
   form.reset();
   removeEffects();
-  form.removeEventListener('submit',onValidation);
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -106,6 +132,7 @@ pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не �
 
 function uploadImage() {
   imgUploadInput.addEventListener('change', openForm);
+  form.addEventListener('submit', onFormSubmit);
 }
 
-export { uploadImage, imgUploadPreview };
+export { uploadImage, imgUploadPreview, onDocumentKeydown };
