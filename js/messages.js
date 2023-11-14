@@ -29,7 +29,6 @@ function showMessage(element, button) {
   element.querySelector(button).addEventListener('click', onCloseButton);
 }
 
-//не работает keydown на '.error'
 function hideMessage() {
   const elementMessage = document.querySelector('.success') || document.querySelector('.error');
   elementMessage.remove();
@@ -44,7 +43,9 @@ function onCloseButton() {
 function showSuccessMessage() {
   showMessage(elementSuccess, '.success__button');
 }
+
 function showErrorMessage() {
   showMessage(elementError, '.error__button');
 }
+
 export { showSuccessMessage, showErrorMessage };

@@ -24,9 +24,11 @@ function showSubmitButton(isDisabled) {
     ? submitButtonCaption.SENDING
     : submitButtonCaption.IDLE;
 }
+
 function isErrorMessage() {
   return Boolean(document.querySelector('#error'));
 }
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !isErrorMessage()) {
     evt.preventDefault();
@@ -51,11 +53,12 @@ async function setUserFormSubmit(formElement) {
   if (!pristine.validate()) {
     return;
   }
+  //нужен именно такой порядок в try
   try {
-    showSuccessMessage();
     showSubmitButton(true);
     await sendPicture(new FormData(formElement));
     closeForm();
+    showSuccessMessage();
   } catch {
     showErrorMessage();
   } finally {
