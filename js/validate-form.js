@@ -1,18 +1,37 @@
 import { isEscapeKey } from './util';
 import { addEffects, removeEffects } from './apply-effect';
+import { sendPicture } from './api';
+import { showSuccessMessage, showErrorMessage } from './messages';
 
 const form = document.querySelector('.img-upload__form');
-const imgUploadInput = document.querySelector('#upload-file');
+const imgUploadInput = document.querySelector('#upload-file'); //загружаем фото
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
-const imgUploadPreview = document.querySelector('.img-upload__preview img'); //туда надо положить добавленное фото
+const imgUploadPreview = document.querySelector('.img-upload__preview img'); //отобразить добавленное фото
 const buttonCancel = document.querySelector('#upload-cancel');
 const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
+const submitButton = document.querySelector('#upload-submit');
 const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
+const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];//svg?
+const submitButtonCaption = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
+};
+
+function showSubmitButton(isDisabled) {
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled
+    ? submitButtonCaption.SENDING
+    : submitButtonCaption.IDLE;
+}
+
+function isErrorMessage() {
+  return Boolean(document.querySelector('#error'));
+}
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) && !isErrorMessage()) {
     evt.preventDefault();
     closeForm(); //другая ф-ция, нельзя взять из render-big-picture
   }
@@ -31,19 +50,33 @@ const pristine = new Pristine(form, {
   errorTextClass: 'form-error'
 });
 
-const onValidation = (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
+async function setUserFormSubmit(formElement) {
+  if (!pristine.validate()) {
+    return;
   }
+  //нужен именно такой порядок в try
+  try {
+    showSubmitButton(true);
+    await sendPicture(new FormData(formElement));
+    closeForm();
+    showSuccessMessage();
+  } catch {
+    showErrorMessage();
+  } finally {
+    showSubmitButton(false);
+  }
+}
+
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  setUserFormSubmit(evt.target);
 };
 
 function openForm() {
   document.body.classList.add('modal-open');
   imgUploadOverlay.classList.remove('hidden');
   addEffects();
-  form.addEventListener('submit', onValidation);
   document.addEventListener('keydown', onDocumentKeydown);
   textDescription.addEventListener('keydown', onTextKeydown);
   textHashtags.addEventListener('keydown', onTextKeydown);
@@ -56,7 +89,6 @@ buttonCancel.addEventListener('click', () => {
 function closeForm() {
   form.reset();
   removeEffects();
-  form.removeEventListener('submit',onValidation);
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -65,9 +97,16 @@ function closeForm() {
 }
 
 //добавить загруженное фото
-//  imgUploadPreview.addEventListener('load', (evt) => {
-//   imgUploadPreview.src = evt.target.result;
-// });
+imgUploadInput.addEventListener('change', () => {
+  const file = imgUploadInput.files[0];
+  // const fileName = file.name.toLowerCase();
+  //const matches = FILE_EXTENSIONS.some((it) => file.endWith(it));
+  //if (matches) {
+  imgUploadPreview.src = URL.createObjectURL(file);
+  //}
+});
+
+//document.querySelector('.img-filters').classList.remove('img-filters--inactive');//делаем фильтры видимыми
 
 //количество хэш-тегов не более 5
 function checkHashtagCount(arrayString) {
@@ -106,6 +145,7 @@ pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не �
 
 function uploadImage() {
   imgUploadInput.addEventListener('change', openForm);
+  form.addEventListener('submit', onFormSubmit);
 }
 
-export { uploadImage, imgUploadPreview };
+export { uploadImage, imgUploadPreview, onDocumentKeydown };

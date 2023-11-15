@@ -1,4 +1,3 @@
-import {OBJECT_COUNT, DESCRIPTIONS, NAMES, MESSAGES} from './data.js';
 import {getRandomInteger, createRandomIdFromRangeGenerator, getRandomArrayElement, createIdGenerator} from './util.js';
 
 const START_GENERATE_NUMBER = 1;

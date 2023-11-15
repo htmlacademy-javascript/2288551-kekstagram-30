@@ -1,9 +1,23 @@
-import {makePhoto} from './generate-posts.js';
-import {renderPictures} from './render-pictures';
+import { showErrorMessage } from './util';
+import { renderPictures } from './render-pictures';
 import { uploadImage } from './validate-form';
+import { loadPictures } from './api';
 
-const POST_COUNT = 25;
-const generatePosts = Array.from({length: POST_COUNT}, makePhoto);
+async function bootstrap() {
 
-renderPictures(generatePosts);
-uploadImage();
+  // loadPictures()
+  // .then((posts) => {
+  //   renderPictures(posts);
+  // });
+
+  try {
+    const pictures = await loadPictures();
+    renderPictures(pictures);
+  } catch (error) {
+    showErrorMessage();
+  }
+
+  uploadImage(); //validation
+}
+
+bootstrap();
