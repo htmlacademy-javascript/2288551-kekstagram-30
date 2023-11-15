@@ -4,12 +4,6 @@ import { uploadImage } from './validate-form';
 import { loadPictures } from './api';
 
 async function bootstrap() {
-
-  // loadPictures()
-  // .then((posts) => {
-  //   renderPictures(posts);
-  // });
-
   try {
     const pictures = await loadPictures();
     renderPictures(pictures);

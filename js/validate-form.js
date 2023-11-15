@@ -19,7 +19,7 @@ const submitButtonCaption = {
   SENDING: 'Сохраняю...'
 };
 
-function showSubmitButton(isDisabled) {
+function toggleSubmitButton(isDisabled) {
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled
     ? submitButtonCaption.SENDING
@@ -56,14 +56,14 @@ async function setUserFormSubmit(formElement) {
   }
   //нужен именно такой порядок в try
   try {
-    showSubmitButton(true);
+    toggleSubmitButton(true);
     await sendPicture(new FormData(formElement));
     closeForm();
     showSuccessMessage();
   } catch {
     showErrorMessage();
   } finally {
-    showSubmitButton(false);
+    toggleSubmitButton(false);
   }
 }
 
@@ -100,7 +100,7 @@ function closeForm() {
 imgUploadInput.addEventListener('change', () => {
   const file = imgUploadInput.files[0];
   // const fileName = file.name.toLowerCase();
-  //const matches = FILE_EXTENSIONS.some((it) => file.endWith(it));
+  //const matches = FILE_EXTENSIONS.some((it) => fileName.endWith(it));
   //if (matches) {
   imgUploadPreview.src = URL.createObjectURL(file);
   //}
