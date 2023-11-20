@@ -7,6 +7,8 @@ async function bootstrap() {
   try {
     const pictures = await loadPictures();
     renderPictures(pictures);
+    //делаем фильтры видимыми, когда картинки загрузились
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
   } catch (error) {
     showErrorMessage();
   }
