@@ -13,7 +13,7 @@ const textHashtags = document.querySelector('.text__hashtags');
 const submitButton = document.querySelector('#upload-submit');
 const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
-const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];//svg?
+const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];
 const submitButtonCaption = {
   IDLE: 'Сохранить',
   SENDING: 'Сохраняю...'
@@ -96,15 +96,20 @@ function closeForm() {
   textHashtags.removeEventListener('keydown', onTextKeydown);
 }
 
-//добавить загруженное фото
-imgUploadInput.addEventListener('change', () => {
-  const file = imgUploadInput.files[0];
+//проверка загруженного файла
+const isValidType = (file) => {
   const fileName = file.name.toLowerCase();
-  const matches = FILE_EXTENSIONS.some((item) => fileName.endsWith(item));
-  if (matches) {
+  return FILE_EXTENSIONS.some((item) => fileName.endsWith(item));
+};
+
+//добавить загруженное фото
+const onFileInputChange = () => {
+  const file = imgUploadInput.files[0];
+  if (file && isValidType(file)) {
     imgUploadPreview.src = URL.createObjectURL(file);
+    openForm();
   }
-});
+};
 
 //количество хэш-тегов не более 5
 function checkHashtagCount(arrayString) {
@@ -142,7 +147,7 @@ pristine.addValidator(textHashtags, validator('regExp'), 'некорректно
 pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
 
 function uploadImage() {
-  imgUploadInput.addEventListener('change', openForm);
+  imgUploadInput.addEventListener('change', onFileInputChange);
   form.addEventListener('submit', onFormSubmit);
 }
 
