@@ -13,18 +13,21 @@ const textHashtags = document.querySelector('.text__hashtags');
 const submitButton = document.querySelector('#upload-submit');
 const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
-const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];//svg?
+const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];
 const submitButtonCaption = {
   IDLE: 'Сохранить',
   SENDING: 'Сохраняю...'
 };
 
-function showSubmitButton(isDisabled) {
+//кнопка должно не работать пока не загрузиться форма
+//document.querySelector('.img-upload__input').disabled = true;
+
+const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled
     ? submitButtonCaption.SENDING
     : submitButtonCaption.IDLE;
-}
+};
 
 function isErrorMessage() {
   return Boolean(document.querySelector('#error'));
@@ -56,17 +59,16 @@ async function setUserFormSubmit(formElement) {
   }
   //нужен именно такой порядок в try
   try {
-    showSubmitButton(true);
+    toggleSubmitButton(true);
     await sendPicture(new FormData(formElement));
     closeForm();
     showSuccessMessage();
   } catch {
     showErrorMessage();
   } finally {
-    showSubmitButton(false);
+    toggleSubmitButton(false);
   }
 }
-
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
@@ -96,17 +98,20 @@ function closeForm() {
   textHashtags.removeEventListener('keydown', onTextKeydown);
 }
 
-//добавить загруженное фото
-imgUploadInput.addEventListener('change', () => {
-  const file = imgUploadInput.files[0];
-  // const fileName = file.name.toLowerCase();
-  //const matches = FILE_EXTENSIONS.some((it) => file.endWith(it));
-  //if (matches) {
-  imgUploadPreview.src = URL.createObjectURL(file);
-  //}
-});
+//проверка загруженного файла
+const isValidType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return FILE_EXTENSIONS.some((item) => fileName.endsWith(item));
+};
 
-//document.querySelector('.img-filters').classList.remove('img-filters--inactive');//делаем фильтры видимыми
+//добавить загруженное фото
+const onFileInputChange = () => {
+  const file = imgUploadInput.files[0];
+  if (file && isValidType(file)) {
+    imgUploadPreview.src = URL.createObjectURL(file);
+    openForm();
+  }
+};
 
 //количество хэш-тегов не более 5
 function checkHashtagCount(arrayString) {
@@ -144,7 +149,7 @@ pristine.addValidator(textHashtags, validator('regExp'), 'некорректно
 pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
 
 function uploadImage() {
-  imgUploadInput.addEventListener('change', openForm);
+  imgUploadInput.addEventListener('change', onFileInputChange);
   form.addEventListener('submit', onFormSubmit);
 }
 

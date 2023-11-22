@@ -4,7 +4,7 @@ const pictures = document.querySelector('.pictures');
 const templatePost = document.querySelector('#picture').content.querySelector('.picture');
 const similarListFragment = document.createDocumentFragment();
 
-function renderPictures(posts) {
+const renderPictures = (posts) => {
   posts.forEach((element) => {
     const { url, description, comments, likes } = element;
     const post = templatePost.cloneNode(true);
@@ -22,6 +22,6 @@ function renderPictures(posts) {
   });
 
   pictures.append(similarListFragment);
-}
+};
 
-export { renderPictures };
+export { renderPictures, pictures };
