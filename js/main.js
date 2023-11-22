@@ -9,10 +9,9 @@ async function bootstrap() {
     const pictures = await loadPictures();
     renderPictures(pictures);
     initFilters(pictures);
+    uploadImage(); //validation
   } catch (error) {
     showErrorMessage();
   }
-
-  uploadImage(); //validation
 }
 bootstrap();

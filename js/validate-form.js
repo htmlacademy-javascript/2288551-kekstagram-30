@@ -19,12 +19,15 @@ const submitButtonCaption = {
   SENDING: 'Сохраняю...'
 };
 
-function toggleSubmitButton(isDisabled) {
+//кнопка должно не работать пока не загрузиться форма
+//document.querySelector('.img-upload__input').disabled = true;
+
+const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled
     ? submitButtonCaption.SENDING
     : submitButtonCaption.IDLE;
-}
+};
 
 function isErrorMessage() {
   return Boolean(document.querySelector('#error'));
@@ -66,7 +69,6 @@ async function setUserFormSubmit(formElement) {
     toggleSubmitButton(false);
   }
 }
-
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
