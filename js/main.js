@@ -6,10 +6,10 @@ import { initFilters } from './filters';
 
 async function bootstrap() {
   try {
+    await uploadImage(); //validation
     const pictures = await loadPictures();
     renderPictures(pictures);
     initFilters(pictures);
-    uploadImage(); //validation
   } catch (error) {
     showErrorMessage();
   }

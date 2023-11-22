@@ -11,6 +11,7 @@ const buttonCancel = document.querySelector('#upload-cancel');
 const textDescription = document.querySelector('.text__description');
 const textHashtags = document.querySelector('.text__hashtags');
 const submitButton = document.querySelector('#upload-submit');
+const effectsPreviews = document.querySelectorAll('.effects__preview');
 const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAGS_COUNT = 5;
 const FILE_EXTENSIONS = ['jpg', 'jpeg', 'png'];
@@ -18,9 +19,6 @@ const submitButtonCaption = {
   IDLE: 'Сохранить',
   SENDING: 'Сохраняю...'
 };
-
-//кнопка должно не работать пока не загрузиться форма
-//document.querySelector('.img-upload__input').disabled = true;
 
 const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
@@ -30,13 +28,13 @@ const toggleSubmitButton = (isDisabled) => {
 };
 
 function isErrorMessage() {
-  return Boolean(document.querySelector('#error'));
+  return Boolean(document.querySelector('.error'));
 }
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt) && !isErrorMessage()) {
     evt.preventDefault();
-    closeForm(); //другая ф-ция, нельзя взять из render-big-picture
+    closeForm();
   }
 };
 
@@ -50,7 +48,7 @@ const onTextKeydown = (evt) => {
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'form-error'
+  errorTextClass: 'img-upload__field-wrapper--error'
 });
 
 async function setUserFormSubmit(formElement) {
@@ -90,9 +88,9 @@ buttonCancel.addEventListener('click', () => {
 
 function closeForm() {
   form.reset();
-  removeEffects();
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
+  removeEffects();
   document.removeEventListener('keydown', onDocumentKeydown);
   textDescription.removeEventListener('keydown', onTextKeydown);
   textHashtags.removeEventListener('keydown', onTextKeydown);
@@ -109,8 +107,11 @@ const onFileInputChange = () => {
   const file = imgUploadInput.files[0];
   if (file && isValidType(file)) {
     imgUploadPreview.src = URL.createObjectURL(file);
-    openForm();
+    effectsPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url('${imgUploadPreview.src}')`;
+    });
   }
+  openForm();
 };
 
 //количество хэш-тегов не более 5
@@ -148,7 +149,7 @@ pristine.addValidator(textHashtags, validator('count'), 'не более 5 хэ�
 pristine.addValidator(textHashtags, validator('regExp'), 'некорректно введен хэш-тег');
 pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
 
-function uploadImage() {
+async function uploadImage() {
   imgUploadInput.addEventListener('change', onFileInputChange);
   form.addEventListener('submit', onFormSubmit);
 }
