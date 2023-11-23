@@ -55,6 +55,7 @@ async function setUserFormSubmit(formElement) {
   if (!pristine.validate()) {
     return;
   }
+  pristine.reset();
   //нужен именно такой порядок в try
   try {
     toggleSubmitButton(true);
@@ -88,6 +89,11 @@ buttonCancel.addEventListener('click', () => {
 
 function closeForm() {
   form.reset();
+  pristine.reset();
+  imgUploadPreview.src = 'img/upload-default-image.jpg';
+  effectsPreviews.forEach((preview) => {
+    preview.removeAttribute('style');
+  });
   document.body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   removeEffects();
