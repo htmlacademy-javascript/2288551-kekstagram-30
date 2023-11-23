@@ -60,7 +60,7 @@ noUiSlider.create(effectSlider, {
   connect: 'lower',
   format: {
     to(value) {
-      return Number(value).toFixed(1);
+      return parseFloat(value);
     },
     from(value) { // from нужен, ругается nouislider.js
       return parseFloat(value);
