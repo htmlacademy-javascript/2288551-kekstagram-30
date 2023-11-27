@@ -1,9 +1,9 @@
-const elementSuccess = document
+const successContainer = document
   .querySelector('#success')
   .content.
   querySelector('.success');
 
-const elementError = document
+const errorContainer = document
   .querySelector('#error')
   .content
   .querySelector('.error');
@@ -41,11 +41,11 @@ function onCloseButton() {
 }
 
 function showSuccessMessage() {
-  showMessage(elementSuccess, '.success__button');
+  showMessage(successContainer, '.success__button');
 }
 
 function showErrorMessage() {
-  showMessage(elementError, '.error__button');
+  showMessage(errorContainer, '.error__button');
 }
 
 export { showSuccessMessage, showErrorMessage };
