@@ -11,7 +11,7 @@ const scaleControlValue = document.querySelector('.scale__control--value');
 const imgUploadScale = document.querySelector('.img-upload__scale');
 let currentFilter;
 
-const filters = {
+const FILTERS = {
   chrome: {
     name: 'grayscale',
     range: { min: 0, max: 1 },
@@ -77,16 +77,16 @@ effectSlider.noUiSlider.on('update', () => {
   }
 });
 
-const onEffects = (evt) => {
+const setEffects = (evt) => {
   imgUploadPreview.removeAttribute('class'); //убираем класс
   const effectsPreview = `effects__preview--${evt.target.value}`;//стиль фильтра
   imgUploadPreview.classList.add(effectsPreview);
   effectLevel.classList.remove('hidden');
 
-  if (filters[evt.target.value]) {
-    currentFilter = filters[evt.target.value];
+  if (FILTERS[evt.target.value]) {
+    currentFilter = FILTERS[evt.target.value];
     /** @to-do */
-    const { range: { min, max }, start, step } = filters[evt.target.value];
+    const { range: { min, max }, start, step } = FILTERS[evt.target.value];
 
     effectSlider.noUiSlider.updateOptions({
       range: {
@@ -106,7 +106,7 @@ const onEffects = (evt) => {
   }
 };
 
-const onScaleButtons = (evt) => {
+const onScaleButtonsClick = (evt) => {
   const scaleControlNumber = parseInt(scaleControlValue.value, 10);
 
   if (scaleControlNumber > MIN_SIZE && evt.target.classList.contains('scale__control--smaller')) {
@@ -120,15 +120,15 @@ const onScaleButtons = (evt) => {
 
 //ф-ции для добавления фильтров и размера, передаю в openForm() и closeForm() из ./validate-form
 function addEffects() {
-  imgUploadScale.addEventListener('click', onScaleButtons);
-  effectsList.addEventListener('click', onEffects);
+  imgUploadScale.addEventListener('click', onScaleButtonsClick);
+  effectsList.addEventListener('click', setEffects);
   imgUploadPreview.style.transform = 'scale(1)'; //при открытии окна, фото всегда 100%
   effectLevel.classList.add('hidden');
 }
 
 function removeEffects() {
-  imgUploadScale.removeEventListener('click', onScaleButtons);
-  effectsList.removeEventListener('click', onEffects);
+  imgUploadScale.removeEventListener('click', onScaleButtonsClick);
+  effectsList.removeEventListener('click', setEffects);
   imgUploadPreview.style.filter = 'none'; //сброс фильтра
   effectLevel.classList.add('hidden'); // прячем ползунок
 }
