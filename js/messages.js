@@ -26,7 +26,7 @@ function showMessage(element, button) {
   document.body.append(element);
   document.body.addEventListener('click', onBodyClick);
   document.addEventListener('keydown', onDocumentKeydown);
-  element.querySelector(button).addEventListener('click', onCloseButton);
+  element.querySelector(button).addEventListener('click', onCloseButtonClick);
 }
 
 function hideMessage() {
@@ -36,7 +36,7 @@ function hideMessage() {
   document.body.removeEventListener('click', onBodyClick);
 }
 
-function onCloseButton() {
+function onCloseButtonClick() {
   hideMessage();
 }
 
