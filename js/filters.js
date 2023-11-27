@@ -2,6 +2,11 @@ import { createRandomIdFromRangeGenerator, debounce } from './util';
 import { picturesContainer, renderPictures } from './render-pictures';
 
 const PICTURE_RANDOM_COUNT = 10;
+const FiltersNames = {
+  FILTER_DEFAULT: 'filter-default',
+  FILTER_RANDOM: 'filter-random',
+  FILTER_DISCUSSED: 'filter-discussed'
+};
 const imgFiltersForm = document.querySelector('.img-filters__form');
 
 //убираем все фото
@@ -30,10 +35,10 @@ const rerenderPictures = (data) => {
 const debounceRerender = debounce(rerenderPictures);
 
 const filtersFunctions = {
-  'filter-default': (data) => {
+  [FiltersNames.FILTER_DEFAULT]: (data) => {
     debounceRerender(data);
   },
-  'filter-random': (data) => {
+  [FiltersNames.FILTER_RANDOM]: (data) => {
     const createPictureId = createRandomIdFromRangeGenerator(0, data.length - 1);
     const randomPictures = [];
     const min = Math.min(PICTURE_RANDOM_COUNT, data.length);
@@ -42,7 +47,7 @@ const filtersFunctions = {
     }
     debounceRerender(randomPictures);
   },
-  'filter-discussed': (data) => {
+  [FiltersNames.FILTER_DISCUSSED]: (data) => {
     debounceRerender(
       data
         .slice()
