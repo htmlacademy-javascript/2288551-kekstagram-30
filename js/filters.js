@@ -1,12 +1,12 @@
 import { createRandomIdFromRangeGenerator, debounce } from './util';
-import { pictures, renderPictures } from './render-pictures';
+import { picturesContainer, renderPictures } from './render-pictures';
 
-const imgFiltersForm = document.querySelector('.img-filters__form');
 const PICTURE_RANDOM_COUNT = 10;
+const imgFiltersForm = document.querySelector('.img-filters__form');
 
 //убираем все фото
 const clearPictures = () => {
-  pictures.querySelectorAll('.picture').forEach((element) => element.remove());
+  picturesContainer.querySelectorAll('.picture').forEach((element) => element.remove());
 };
 
 //делаем фильтры видимыми

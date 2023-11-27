@@ -135,7 +135,7 @@ function checkUnique(arrayString) {
   return (new Set(arrayString).size === arrayString.length);
 }
 
-const validator = (type) => (string) => {
+const getValidator = (type) => (string) => {
   if (string.length === 0) { //если string пустая не проверять
     return true;
   }
@@ -151,9 +151,9 @@ const validator = (type) => (string) => {
   }
 };
 
-pristine.addValidator(textHashtags, validator('count'), 'не более 5 хэш-тегов');
-pristine.addValidator(textHashtags, validator('regExp'), 'некорректно введен хэш-тег');
-pristine.addValidator(textHashtags, validator('unique'), 'хэш-теги не должны повторяться');
+pristine.addValidator(textHashtags, getValidator('count'), 'не более 5 хэш-тегов');
+pristine.addValidator(textHashtags, getValidator('regExp'), 'некорректно введен хэш-тег');
+pristine.addValidator(textHashtags, getValidator('unique'), 'хэш-теги не должны повторяться');
 
 async function uploadImage() {
   imgUploadInput.addEventListener('change', onFileInputChange);

@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util';
 
+const COMMENTS_PORTION = 5;
 const closePictureButton = document.querySelector('.big-picture__cancel');
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = document.querySelector('.big-picture__img img');
@@ -10,7 +11,6 @@ const socialComments = document.querySelector('.social__comments'); // ul
 const socialComment = document.querySelector('.social__comment'); // li
 const socialCommentShownCount = document.querySelector('.social__comment-shown-count');
 const commentsLoader = document.querySelector('.comments-loader');
-const COMMENTS_PORTION = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
