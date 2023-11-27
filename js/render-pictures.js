@@ -1,6 +1,6 @@
 import { renderBigPicture } from './render-big-pictures';
 
-const pictures = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 const templatePost = document.querySelector('#picture').content.querySelector('.picture');
 const similarListFragment = document.createDocumentFragment();
 
@@ -21,7 +21,7 @@ const renderPictures = (posts) => {
     });
   });
 
-  pictures.append(similarListFragment);
+  picturesContainer.append(similarListFragment);
 };
 
-export { renderPictures, pictures };
+export { renderPictures, picturesContainer };

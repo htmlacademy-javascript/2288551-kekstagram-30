@@ -1,14 +1,14 @@
 import { imgUploadPreview } from './validate-form';
 
+const SCALE_STEP = 25;
+const MAX_SIZE = 100;
+const MIN_SIZE = 25;
 const effectSlider = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const effectLevel = document.querySelector('.effect-level');
 const effectsList = document.querySelector('.effects__list');
 const scaleControlValue = document.querySelector('.scale__control--value');
 const imgUploadScale = document.querySelector('.img-upload__scale');
-const SCALE_STEP = 25;
-const MAX_SIZE = 100;
-const MIN_SIZE = 25;
 let currentFilter;
 
 const filters = {
